@@ -1,4 +1,3 @@
-# spotify_song_scraper_simple.py
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 import pandas as pd

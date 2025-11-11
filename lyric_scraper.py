@@ -50,4 +50,4 @@ for idx, row in df.iterrows():
 
 # === Simpan hasil ke file ===
 df.to_excel(OUTPUT_FILE, index=False)
-print(f"\n✅ Proses selesai! Lirik disimpan ke: {OUTPUT_FILE}")
+print(f"\nProses selesai! Lirik disimpan ke: {OUTPUT_FILE}")

@@ -16,16 +16,16 @@ DEVICE = "cpu"
 MAX_SEQ_LENGTH = 512
 # ------------------------
 
+#--- INISIALISASI MODEL BERT ---
 def init_bert():
-    """Inisialisasi model BERT dan tokenizer."""
     tokenizer = BertTokenizer.from_pretrained("bert-base-uncased", use_fast=True)
     model = BertModel.from_pretrained("bert-base-uncased")
     model.eval()
     model.to(DEVICE)
     return tokenizer, model
 
+#--- FUNGSI EMBEDDING BERT UNTUK BATCH ---
 def bert_embed_batch(texts, tokenizer, model, use_cls=False):
-    """Ekstraksi embedding BERT dengan pooling (CPU)."""
     enc = tokenizer(
         texts,
         padding=True,
@@ -75,7 +75,7 @@ def main():
 
     df['bert_embedding'] = embeddings
 
-    # Simpan hasil
+    #--- Save output ---
     df.to_pickle(OUTPUT_PICKLE)
     meta_df = df.drop(columns=['bert_embedding'], errors='ignore')
     meta_df.to_excel(OUTPUT_META_XLSX, index=False)
