@@ -1,4 +1,3 @@
-# lyric_scraper_simple.py
 import pandas as pd
 import lyricsgenius
 import time

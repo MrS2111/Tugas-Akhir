@@ -1,4 +1,3 @@
-# bert_feature_extraction_cpu.py
 import os
 import math
 import pandas as pd
