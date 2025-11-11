@@ -10,10 +10,10 @@ from transformers import BertTokenizer, BertModel
 INPUT_FILE = "Dataset_labeled.xlsx"
 OUTPUT_PICKLE = "Dataset_BERT_Embeddings_128.pkl"
 OUTPUT_META_XLSX = "Dataset_BERT_Metadata_128.xlsx"
-BATCH_SIZE = 16
+BATCH_SIZE = 16 # Ukuran batch untuk pemrosesan BERT
 USE_CLS_POOLING = False
 DEVICE = "cpu"  
-MAX_SEQ_LENGTH = 512
+MAX_SEQ_LENGTH = 512 # Panjang maksimum input token
 # ------------------------
 
 #--- INISIALISASI MODEL BERT ---
