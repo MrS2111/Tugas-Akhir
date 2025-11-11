@@ -3,7 +3,7 @@ import re
 import string
 
 # === Fungsi Preprocessing Lirik ===
-def preprocess_lyrics_final(text):
+def preprocess_lyrics(text):
     if not isinstance(text, str):
         return ""
 
@@ -67,7 +67,7 @@ df = df[
 ].copy()
 
 # Preprocessing lirik
-df['lirik'] = df['lirik'].apply(preprocess_lyrics_final)
+df['lirik'] = df['lirik'].apply(preprocess_lyrics)
 
 # Bersihkan judul dan hapus duplikat
 df['cleaned_title'] = df['judul_lagu'].astype(str).apply(clean_title)
