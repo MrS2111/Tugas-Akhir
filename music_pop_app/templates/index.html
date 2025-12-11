@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Prediksi Popularitas Lagu (BERT + XGBoost)</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="container">
+    <h1>Prediksi Popularitas Lagu</h1>
+    <p class="subtitle">Model: BERT (feature extraction) + XGBoost</p>
+
+    <form method="POST" action="/">
+        <label for="lyrics">Masukkan lirik lagu:</label>
+        <textarea name="lyrics" id="lyrics" rows="10" placeholder="Tulis lirik di sini...">{{ raw_lyrics }}</textarea>
+
+        <button type="submit">Prediksi</button>
+    </form>
+
+    {# pesan error jika ada masalah input / proses prediksi #}
+    {% if error_message %}
+    <div class="alert-error">
+        {{ error_message }}
+    </div>
+    {% endif %}
+
+    {% if prediction_label %}
+    <div class="result-card">
+        <h2>Hasil Prediksi</h2>
+        <p class="label">
+            Kategori:
+            <span class="badge {% if prediction_label == 'Populer' %}badge-popular{% else %}badge-not-popular{% endif %}">
+                {{ prediction_label }}
+            </span>
+        </p>
+        <p class="prob-detail">
+            Probabilitas Populer: <strong>{{ probability_popular }}%</strong><br>
+            Probabilitas Tidak Populer: <strong>{{ probability_not_popular }}%</strong>
+        </p>
+    </div>
+    {% endif %}
+
+    <div class="model-info">
+        <h2>Informasi Model</h2>
+        <ul>
+            <li><strong>Model BERT:</strong> {{ model_name }}</li>
+            <li><strong>Max Sequence Length:</strong> {{ max_seq_len }} token</li>
+            <li><strong>Classifier:</strong> XGBoost (Optuna-tuned)</li>
+            <li><strong>Perangkat Eksekusi:</strong> {{ device }}</li>
+            <li><strong>Output Kelas:</strong> 0 = Tidak Populer, 1 = Populer</li>
+        </ul>
+    </div>
+
+    <footer>
+        <p>Powered by BERT &amp; XGBoost</p>
+    </footer>
+</div>
+</body>
+</html>

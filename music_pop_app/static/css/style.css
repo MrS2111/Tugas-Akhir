@@ -1,0 +1,156 @@
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #0f172a;
+    color: #e5e7eb;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    background: #020617;
+    border-radius: 16px;
+    padding: 24px 28px 32px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.45);
+    border: 1px solid #1e293b;
+}
+
+h1 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 26px;
+    color: #f9fafb;
+}
+
+.subtitle {
+    margin-top: 0;
+    margin-bottom: 24px;
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #e5e7eb;
+}
+
+textarea {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #374151;
+    padding: 12px;
+    resize: vertical;
+    min-height: 140px;
+    font-size: 14px;
+    background: #020617;
+    color: #f9fafb;
+    outline: none;
+}
+
+textarea:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 1px #4f46e5;
+}
+
+button {
+    margin-top: 16px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    background: linear-gradient(to right, #4f46e5, #6366f1);
+    color: white;
+}
+
+button:hover {
+    filter: brightness(1.05);
+}
+
+.result-card {
+    margin-top: 28px;
+    padding: 18px 18px 16px;
+    border-radius: 12px;
+    background: #020617;
+    border: 1px solid #1d4ed8;
+}
+
+.result-card h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.label {
+    margin: 0 0 8px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+}
+
+.badge-popular {
+    background: rgba(22, 163, 74, 0.15);
+    color: #4ade80;
+    border: 1px solid rgba(22, 163, 74, 0.5);
+}
+
+.badge-not-popular {
+    background: rgba(220, 38, 38, 0.15);
+    color: #fca5a5;
+    border: 1px solid rgba(220, 38, 38, 0.5);
+}
+
+.prob-detail {
+    font-size: 14px;
+    color: #e5e7eb;
+}
+
+footer {
+    margin-top: 28px;
+    font-size: 12px;
+    text-align: center;
+    color: #6b7280;
+}
+.model-info {
+    margin-top: 24px;
+    padding: 16px 18px;
+    border-radius: 12px;
+    background: #020617;
+    border: 1px dashed #4b5563;
+    font-size: 13px;
+}
+
+.model-info h2 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+.model-info ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.model-info li {
+    margin-bottom: 4px;
+    color: #d1d5db;
+}
+.alert-error {
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background-color: #3b0b0b;
+    color: #ffe6e6;
+    border: 1px solid #ff4d4d;
+    font-size: 0.95rem;
+}

@@ -1,0 +1,152 @@
+# ==============================
+# 2. PREPROCESS LIRIK
+# ==============================
+
+def remove_repeated_sections(text: str) -> str:
+    """
+    Menghapus blok/stanza lirik yang berulang.
+    Hanya mempertahankan kemunculan pertama setiap blok (setelah dinormalisasi).
+    Cocok untuk reff/chorus yang muncul sebagai satu bagian utuh.
+    """
+    # Bagi berdasarkan satu atau lebih baris kosong → dapat stanza/bagian
+    blocks = re.split(r"\n\s*\n+", text)
+    seen = set()
+    kept_blocks = []
+
+    for block in blocks:
+        raw_block = block.strip()
+        if not raw_block:
+            continue
+
+        # Normalisasi blok untuk pengecekan duplikat
+        norm = re.sub(r"\s+", " ", raw_block.lower()).strip()
+
+        if norm in seen:
+            # blok ini sudah pernah muncul → anggap reff berulang, buang
+            continue
+
+        seen.add(norm)
+        kept_blocks.append(raw_block)
+
+    # Gabungkan kembali dengan satu baris kosong antar blok
+    return "\n\n".join(kept_blocks)
+
+
+def remove_repeated_lines(text: str) -> str:
+    """
+    Menghapus baris lirik yang berulang.
+    Hanya mempertahankan kemunculan pertama setiap baris (setelah dinormalisasi).
+    Cocok untuk mengurangi baris yang persis sama di dalam/antar blok.
+    """
+    lines = text.splitlines()
+    seen = set()
+    kept_lines = []
+
+    for line in lines:
+        raw_line = line.strip()
+        if not raw_line:
+            continue  # lewati baris kosong
+
+        # Normalisasi untuk pengecekan duplikat
+        norm = re.sub(r"\s+", " ", raw_line.lower()).strip()
+
+        if norm in seen:
+            # baris ini sudah pernah muncul → anggap pengulangan
+            continue
+
+        seen.add(norm)
+        kept_lines.append(raw_line)
+
+    return "\n".join(kept_lines)
+
+
+def preprocess_lyrics(text: str) -> str:
+    if not isinstance(text, str):
+        return ""
+
+    # Kalau ada [Intro]/[Verse]/[Chorus]/dst, mulai dari sana
+    match = re.search(r"\[(intro|verse|pre-chorus|chorus|refrain|hook|bridge|outro)[^\]]*\]",
+                      text, re.IGNORECASE)
+    if match:
+        text = text[match.start():]
+
+    # Potong kalau ada "read more"
+    text = re.split(r"read\s*more", text, flags=re.IGNORECASE)[0]
+
+    # Hapus tag seperti [Chorus], [Verse], [Bridge], dll
+    text = re.sub(r"\[[^\]]*\]", "", text)
+
+    # Hapus sisa teks iklan Genius (You might also like, embed, translations, dll)
+    text = re.sub(r"(you might also like|embed|translations|\d+embed)",
+                  "", text, flags=re.IGNORECASE)
+
+    # === HAPUS BAGIAN LIRIK YANG BERULANG DALAM BENTUK BLOK (reff/stanza) ===
+    text = remove_repeated_sections(text)
+
+    # === (opsional) HAPUS BARIS YANG MASIH BERULANG DI DALAM BLOK ===
+    text = remove_repeated_lines(text)
+
+    # ================= Lanjutan preprocessing biasa =================
+
+    # Lowercase
+    text = text.lower()
+
+    # Hapus angka
+    text = re.sub(r"\d+", " ", text)
+
+    # Hapus tanda baca
+    text = text.translate(str.maketrans("", "", string.punctuation))
+
+    # Hapus karakter non-ASCII
+    text = text.encode('ascii', 'ignore').decode()
+
+    # Ganti newline jadi spasi dulu, lalu rapikan spasi
+    text = text.replace("\n", " ")
+    text = re.sub(r"\s+", " ", text).strip()
+
+    return text
+
+
+# Pola pembersihan judul (versi preprocessing lirik)
+title_patterns_pre = [
+    r' - Radio Edit',
+    r' - Live in.*',
+    r' - .*Remix',
+    r'-\s*Bonus.*',
+    r'feat\..*',
+    r'ft\..*',
+    r'[^\w\s]',
+]
+
+def clean_title_for_lyrics(title: str) -> str:
+    title = str(title)
+    for pattern in title_patterns_pre:
+        title = re.sub(pattern, '', title, flags=re.IGNORECASE)
+    return title.strip().lower()
+
+
+def preprocess_lyrics_df(df: pd.DataFrame) -> pd.DataFrame:
+    # Pastikan kolom lirik ada
+    if 'lirik' not in df.columns:
+        raise ValueError("Kolom 'lirik' tidak ditemukan di dataset.")
+
+    # Hapus baris dengan lirik error / tidak ditemukan (kalau ada teks seperti itu)
+    df = df[~df['lirik'].astype(str).str.contains("Lirik tidak ditemukan", case=False, na=False)]
+    df = df[~df['lirik'].astype(str).str.contains("error", case=False, na=False)]
+
+    # Terapkan preprocessing ke kolom lirik
+    print("Melakukan preprocessing pada kolom lirik...")
+    df['lirik'] = df['lirik'].astype(str).apply(preprocess_lyrics)
+
+    # Bersihkan judul lagi untuk jaga-jaga duplikat
+    df['cleaned_title'] = df['judul_lagu'].astype(str).apply(clean_title_for_lyrics)
+    # gunakan kombinasi artis + cleaned_title, supaya judul sama beda artis tidak hilang
+    df = df.drop_duplicates(subset=['artis', 'cleaned_title'], keep='first')
+    df = df.drop(columns=['cleaned_title'])
+
+    # Hapus lirik kosong / terlalu pendek
+    df = df[df['lirik'].str.strip() != ""]
+    df = df[df['lirik'].str.split().str.len() > 10]
+
+    print(f"Total lagu setelah preprocessing lirik: {len(df)}")
+    return df

@@ -4,7 +4,7 @@ import time
 
 # === Konfigurasi ===
 ACCESS_TOKEN = "bRawa4_y8bq_XGdxewxXGtPU4RlPniRHTL7uKJ8Xpzv3VFrja7jpbNzxS1iXIDM1"
-INPUT_FILE = "top_10_artists_songs_with_the_most_monthly_listeners_spotify_Filtered.xlsx"
+INPUT_FILE = "top_10_artists_songs_with_the_most_monthly_listeners_spotify.xlsx"
 OUTPUT_FILE = "spotify_pop_music_dengan_lirik.xlsx"
 SLEEP_TIME = 2  # detik antar permintaan ke API Genius
 
